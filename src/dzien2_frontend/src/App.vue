@@ -7,7 +7,8 @@ async function handleSubmit(e) {
   e.preventDefault();
   const target = e.target;
   const name = target.querySelector('#name').value;
-  await dzien2_backend.greet(name).then((response) => {
+  const surname = target.querySelector('#surname').value;
+  await dzien2_backend.greet(name, surname).then((response) => {
     greeting.value = response;
   });
 }
@@ -21,6 +22,8 @@ async function handleSubmit(e) {
     <form action="#" @submit="handleSubmit">
       <label for="name">Enter your name: &nbsp;</label>
       <input id="name" alt="Name" type="text" />
+      <label for="name">Enter your Surname: &nbsp;</label>
+      <input type="text" id="surname" alt="Surname"/>
       <button type="submit">Click Me!</button>
     </form>
     <section id="greeting">{{ greeting }}</section>
