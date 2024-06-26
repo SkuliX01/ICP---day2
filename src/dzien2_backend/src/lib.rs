@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::cell::RefMut;
 
 thread_local! {
     static WPISY: RefCell<Vec<String>> = RefCell::default();
@@ -13,6 +14,23 @@ fn greet(name: String, last_name: i8) -> String {
 fn dodaj_wpis(wpis: String) {
     WPISY.with(|wpisy| {
         wpisy.borrow_mut().push(wpis)
+    });
+}
+
+#[ic_cdk::update]
+fn usun_wpis(id_wpisu: usize) {
+    WPISY.with(|wpisy: &RefCell<Vec<String>>| {
+        wpisy.borrow_mut().remove(id_wpisu);
+    });
+}
+
+#[ic_cdk::update]
+fn edytuj_wpis(id_wpisu: usize, nowy_wpis: String) {
+    WPISY.with(|wpisy: &RefCell<Vec<String>>| {
+        let mut binding: RefMut<Vec<String>> = wpisy.borrow_mut();
+        let wpis: Option<&mut String> = binding.get_mut(id_wpisu);
+        let stary_wpis: &mut String = wpis.unwrap();
+        *stary_wpis = nowy_wpis;
     });
 }
 
